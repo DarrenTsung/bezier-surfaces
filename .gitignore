@@ -19,3 +19,14 @@
 *.exe
 *.out
 *.app
+
+
+# Vim swap files
+**.swp
+
+# OSX files
+**.DS_Store
+
+# project builds
+bezier-s
+bezier-s.exe
