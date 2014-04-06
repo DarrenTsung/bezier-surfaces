@@ -4,7 +4,15 @@ TESTBUILD := btester
 
 CC := g++
 CCFLAGS := -Ilib -Wall -O3
-LDFLAGS := 
+ifeq ($(shell sw_vers 2>/dev/null | grep Mac | awk '{ print $$2}'),Mac)
+	CFLAGS = -g -DGL_GLEXT_PROTOTYPES -I./include/ -I/usr/X11/include -DOSX
+	LDFLAGS = -framework GLUT -framework OpenGL \
+    	-L"/System/Library/Frameworks/OpenGL.framework/Libraries" \
+    	-lGL -lGLU -lm -lstdc++
+else
+	CFLAGS = -g -DGL_GLEXT_PROTOTYPES -Iglut-3.7.6-bin
+	LDFLAGS = -lglut -lGLU
+endif
 
 SRCFOLDER := src
 OBJFOLDER := obj
@@ -44,4 +52,4 @@ $(TESTFOLDER)/%.o: $(TESTFOLDER)/%.cpp
 $(PROJECT): $(OBJ)
 	$(CC) $(CCFLAGS) -o $@ $^ $(LDFLAGS)
 $(OBJFOLDER)/%.o: $(SRCFOLDER)/%.cpp
-	$(CC) $(CCFLAGS) -o $@ -c $< $(LDFLAGS)
+	$(CC) $(CCFLAGS) -o $@ -c $< 
