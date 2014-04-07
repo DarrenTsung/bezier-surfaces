@@ -1,6 +1,12 @@
 #include "bezier-main.h"
 
-BezierMain::BezierMain() {}
+#define PI 3.14159265359
+
+BezierMain::BezierMain() {
+    t = Transform<float,3,Affine>::Identity();
+    normal = Vector3f(0,0,1);
+    right = Vector3f(1,0,0);
+}
 
 void BezierMain::parsePatchfile(char *filename) {
     ifstream in(filename);
@@ -62,8 +68,24 @@ void BezierMain::draw() {
     // to go to wireframe mode
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
     for(int i=0; i<patches.size(); i++) {
-        patches[i]->draw();
+        patches[i]->draw(t);
     }
     // to go back to normal mode
     glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+}
+
+void BezierMain::transform(TransformationType a, Vector3f axis, float degrees) {
+    t = AngleAxisf((degrees*PI)/180.0f, axis) * t;
+}
+
+void BezierMain::transform(TransformationType a, Vector3f amount) {
+
+}
+
+Vector3f BezierMain::get_normal() {
+    return t.linear() * normal;
+}
+
+Vector3f BezierMain::get_right() {
+    return t.linear() * right;
 }

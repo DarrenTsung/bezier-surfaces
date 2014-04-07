@@ -23,6 +23,74 @@ void reshape(int w, int h) {
 
 }
 
+void handleInput(unsigned char key, int x, int y)
+{
+    switch (key)
+    {
+    case 27:    // ESCAPE KEY
+        exit(0);
+        break;
+    // spacebar closes window
+    case ' ':
+        exit(0);
+        break;
+    }
+}
+
+typedef enum {
+    UP,
+    DOWN,
+    LEFT,
+    RIGHT,
+    NONE
+} ArrowKeyState;
+
+ArrowKeyState arrow_state;
+
+void handleSpecialKeypress(int key, int x, int y) {
+    switch (key) {
+        case GLUT_KEY_LEFT:
+            arrow_state = LEFT;
+            // handle left key
+            // rotate it around the normal
+            mainBez.transform(ROTATION, mainBez.get_normal(), 5);
+            break;
+
+        case GLUT_KEY_RIGHT:
+            arrow_state = RIGHT;
+            // handle right key
+            // rotate it around the normal
+            mainBez.transform(ROTATION, mainBez.get_normal(), -5);
+            break;
+
+        case GLUT_KEY_UP:
+            arrow_state = UP;
+            // handle up key
+            // rotate it around the right vector
+            mainBez.transform(ROTATION, mainBez.get_right(), -5);
+            break;
+
+        case GLUT_KEY_DOWN:
+            arrow_state = DOWN;
+            // handle down key
+            // rotate it around the right vector
+            mainBez.transform(ROTATION, mainBez.get_right(), 5);
+            break;
+    }
+    display();
+}
+
+void handleSpecialKeyReleased(int key, int x, int y) {
+    switch (key) {
+        case GLUT_KEY_LEFT:
+        case GLUT_KEY_RIGHT:
+        case GLUT_KEY_UP:
+        case GLUT_KEY_DOWN:
+            arrow_state = NONE;
+            break;
+    }
+}
+
 int main(int argc, char* argv[]) {
     if (argc > 1) {
         mainBez.parsePatchfile(argv[1]);
@@ -43,6 +111,12 @@ int main(int argc, char* argv[]) {
 
     glutDisplayFunc(display);				// function to run when its time to draw something
     glutReshapeFunc(reshape);				// function to run when the window gets resized
+
+    // set handleInput() function to take keyboard events
+    glutKeyboardFunc(handleInput);
+    // special func for arrow keys... wtf
+    glutSpecialFunc(handleSpecialKeypress);
+    glutSpecialUpFunc(handleSpecialKeyReleased);
 
     glutMainLoop();
 
