@@ -11,6 +11,7 @@ class BezierMain {
         BezierMain();
 
         void parsePatchfile(char* filename);
+        void draw();
 
 
     private:

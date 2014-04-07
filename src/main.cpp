@@ -12,7 +12,7 @@ void display() {
     glLoadIdentity();				        // make sure transformation is "zero'd"
 
     // drawing is done here
-    glutWireSphere(0.5,10,10);
+    mainBez.draw();
     // end drawing
 
     glFlush();

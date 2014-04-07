@@ -21,6 +21,25 @@ BezierPatch::BezierPatch(vector<vector<Point3f*> > a) {
     }
 }
 
+void BezierPatch::draw() {
+    // draw each quad of the patch
+    for(int i=0; i<3; i++) {
+        for(int j=0; j<3; j++) {
+            glBegin(GL_QUADS);
+            // counter-clockwise order
+            Point3f a = *(p[i+1][j]);
+            glVertex2f(a[0], a[1]);
+            a = *(p[i][j]);
+            glVertex2f(a[0], a[1]);
+            a = *(p[i][j+1]);
+            glVertex2f(a[0], a[1]);
+            a = *(p[i+1][j+1]);
+            glVertex2f(a[0], a[1]);
+            glEnd();
+        }
+    }
+}
+
 vector<vector<Point3f*> > BezierPatch::get_matrix() {
     return p;
 }

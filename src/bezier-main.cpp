@@ -43,17 +43,27 @@ void BezierMain::parsePatchfile(char *filename) {
                 mat[j][k] = p;
             }
         }
+
+        /* used to print out the patch
         for(int i=0; i<4; i++) {
             for(int j=0; j<4; j++) {
                 cout << vectorString((*(mat[i][j]))) << " ";
             }
             cout << endl;
         }
+        */
 
         BezierPatch *new_patch = new BezierPatch(mat);
         patches.push_back(new_patch);
-        cout << "successfully pushed back a patch!" << endl;
     }
 }
 
-
+void BezierMain::draw() {
+    // to go to wireframe mode
+    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    for(int i=0; i<patches.size(); i++) {
+        patches[i]->draw();
+    }
+    // to go back to normal mode
+    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+}

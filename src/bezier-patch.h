@@ -14,6 +14,8 @@ class BezierPatch {
         BezierPatch();
         BezierPatch(vector<vector<Point3f*> > a);
 
+        void draw();
+
         vector<vector<Point3f*> > get_matrix();
         void set_matrix(vector<vector<Point3f*> > a);
 };
