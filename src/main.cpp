@@ -48,33 +48,54 @@ typedef enum {
 ArrowKeyState arrow_state;
 
 void handleSpecialKeypress(int key, int x, int y) {
+    int mod = glutGetModifiers();
     switch (key) {
         case GLUT_KEY_LEFT:
             arrow_state = LEFT;
             // handle left key
-            // rotate it around the normal
-            mainBez.transform(ROTATION, mainBez.get_normal(), 5);
+            if (mod == GLUT_ACTIVE_SHIFT) {
+                // translate it
+                mainBez.transform(TRANSLATION, Vector3f(-0.05,0,0));
+            } else {
+                // rotate it around the normal
+                mainBez.transform(ROTATION, mainBez.get_normal(), 5);
+            }
             break;
 
         case GLUT_KEY_RIGHT:
             arrow_state = RIGHT;
             // handle right key
-            // rotate it around the normal
-            mainBez.transform(ROTATION, mainBez.get_normal(), -5);
+            if (mod == GLUT_ACTIVE_SHIFT) {
+                // translate it
+                mainBez.transform(TRANSLATION, Vector3f(0.05,0,0));
+            } else {
+                // rotate it around the normal
+                mainBez.transform(ROTATION, mainBez.get_normal(), -5);
+            }
             break;
 
         case GLUT_KEY_UP:
             arrow_state = UP;
             // handle up key
-            // rotate it around the right vector
-            mainBez.transform(ROTATION, mainBez.get_right(), -5);
+            if (mod == GLUT_ACTIVE_SHIFT) {
+                // translate it
+                mainBez.transform(TRANSLATION, Vector3f(0,0.05,0));
+            } else {
+                // rotate it around the right vector
+                mainBez.transform(ROTATION, mainBez.get_right(), -5);
+            }
             break;
 
         case GLUT_KEY_DOWN:
             arrow_state = DOWN;
             // handle down key
-            // rotate it around the right vector
-            mainBez.transform(ROTATION, mainBez.get_right(), 5);
+            if (mod == GLUT_ACTIVE_SHIFT) {
+                // translate it
+                mainBez.transform(TRANSLATION, Vector3f(0,-0.05,0));
+            } else {
+                // rotate it around the right vector
+                mainBez.transform(ROTATION, mainBez.get_right(), 5);
+            }
             break;
     }
     display();

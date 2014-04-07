@@ -79,7 +79,7 @@ void BezierMain::transform(TransformationType a, Vector3f axis, float degrees) {
 }
 
 void BezierMain::transform(TransformationType a, Vector3f amount) {
-
+    t = Translation<float,3>(amount) * t;
 }
 
 Vector3f BezierMain::get_normal() {
