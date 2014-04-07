@@ -30,3 +30,6 @@
 # project builds
 bezier-s
 bezier-s.exe
+
+# ignore .bez files
+**.bez
