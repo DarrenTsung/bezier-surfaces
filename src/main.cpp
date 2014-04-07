@@ -34,6 +34,14 @@ void handleInput(unsigned char key, int x, int y)
     case ' ':
         exit(0);
         break;
+    case '-':
+        mainBez.transform(SCALE, Vector3f(0.8,0.8,0.8));
+        display();
+        break;
+    case '+':
+        mainBez.transform(SCALE, Vector3f(1.2,1.2,1.2));
+        display();
+        break;
     }
 }
 

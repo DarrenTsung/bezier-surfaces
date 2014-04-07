@@ -75,11 +75,25 @@ void BezierMain::draw() {
 }
 
 void BezierMain::transform(TransformationType a, Vector3f axis, float degrees) {
+    Transform<float,3,Affine> back(Translation<float,3>(-t.translation()));
+    Transform<float,3,Affine> forward(Translation<float,3>(t.translation()));
+
+    t = back * t;
     t = AngleAxisf((degrees*PI)/180.0f, axis) * t;
+    t = forward * t;
 }
 
 void BezierMain::transform(TransformationType a, Vector3f amount) {
-    t = Translation<float,3>(amount) * t;
+    Transform<float,3,Affine> back(Translation<float,3>(-t.translation()));
+    Transform<float,3,Affine> forward(Translation<float,3>(t.translation()));
+
+    if (a == TRANSLATION) {
+        t = Translation<float,3>(amount) * t;
+    } else if (a == SCALE) {
+        t = back * t;
+        t = Scaling(amount) * t;
+        t = forward * t;
+    }
 }
 
 Vector3f BezierMain::get_normal() {

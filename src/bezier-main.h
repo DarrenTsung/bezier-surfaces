@@ -7,7 +7,8 @@
 
 typedef enum {
     ROTATION,
-    TRANSLATION
+    TRANSLATION,
+    SCALE
 } TransformationType;
 
 class BezierMain {
