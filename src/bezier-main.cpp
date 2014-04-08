@@ -49,6 +49,8 @@ void BezierMain::parsePatchfile(char *filename) {
                 mat[j][k] = p;
             }
         }
+        // one line used to seperate patches
+        getline(in, line);
 
         /* used to print out the patch
         for(int i=0; i<4; i++) {
