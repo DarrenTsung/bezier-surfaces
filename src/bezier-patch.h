@@ -5,10 +5,20 @@
 
 class BezierPatch {
     private:
+        // control points
         vector<vector<Point3f*> > p;
+        // subdivision
+        vector<vector<Point3f*> > uniform_p;
+
+        Point3f* calculateUVpoint(float u, float v);
+        Matrix4f getDimensionMatrixOfPoints(int spec);
 
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW
+
+        // subdivision methods
+        void uniform_subdivision(float step_size);
+
 
         // constructors
         BezierPatch();

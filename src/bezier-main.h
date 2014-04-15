@@ -25,6 +25,8 @@ class BezierMain {
         Vector3f get_normal();
         Vector3f get_right();
 
+        void apply_uniform_subdivision(float step_size);
+
     private:
         vector<BezierPatch*> patches;
         Transform<float,3,Affine> t;
