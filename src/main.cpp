@@ -124,7 +124,7 @@ int main(int argc, char* argv[]) {
     if (argc > 1) {
         mainBez.parsePatchfile(argv[1]);
         float subdivision_param = atof(argv[2]);
-        string type = argv[3];
+        string type = (argc > 3) ? argv[3] : "-u";
         if (type == "-u") {
             mainBez.apply_uniform_subdivision(subdivision_param);
         } else if (type == "-a") {
