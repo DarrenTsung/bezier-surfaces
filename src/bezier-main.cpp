@@ -6,6 +6,7 @@ BezierMain::BezierMain() {
     t = Transform<float,3,Affine>::Identity();
     normal = Vector3f(0,0,1);
     right = Vector3f(1,0,0);
+    draw_t = WIREFRAME;
 }
 
 void BezierMain::parsePatchfile(char *filename) {
@@ -73,13 +74,17 @@ void BezierMain::apply_uniform_subdivision(float step_size) {
 }
 
 void BezierMain::draw() {
-    // to go to wireframe mode
-    glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    if (draw_t == WIREFRAME) {
+        // to go to wireframe mode
+        glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
+    }
+    else if (draw_t == FILL) {
+        // to go back to normal mode
+        glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
+    }
     for(unsigned int i=0; i<patches.size(); i++) {
         patches[i]->draw(t);
     }
-    // to go back to normal mode
-    glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
 }
 
 void BezierMain::transform(TransformationType a, Vector3f axis, float degrees) {
@@ -110,4 +115,20 @@ Vector3f BezierMain::get_normal() {
 
 Vector3f BezierMain::get_right() {
     return (t.linear() * right).normalized();
+}
+
+void BezierMain::set_fill_mode() {
+    draw_t = FILL;
+}
+
+void BezierMain::set_wireframe_mode() {
+    draw_t = WIREFRAME;
+}
+
+void BezierMain::toggle_draw_mode() {
+    if (draw_t == FILL) {
+        draw_t = WIREFRAME;
+    } else {
+        draw_t = FILL;
+    }
 }

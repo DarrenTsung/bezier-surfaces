@@ -42,6 +42,10 @@ void handleInput(unsigned char key, int x, int y)
         mainBez.transform(SCALE, Vector3f(1.2,1.2,1.2));
         display();
         break;
+    case 'w':
+        mainBez.toggle_draw_mode();
+        display();
+        break;
     }
 }
 

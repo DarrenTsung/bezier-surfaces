@@ -11,6 +11,11 @@ typedef enum {
     SCALE
 } TransformationType;
 
+typedef enum {
+    WIREFRAME,
+    FILL
+} DrawingType;
+
 class BezierMain {
     public:
         // constructors
@@ -25,9 +30,14 @@ class BezierMain {
         Vector3f get_normal();
         Vector3f get_right();
 
+        void set_fill_mode();
+        void set_wireframe_mode();
+        void toggle_draw_mode();
+
         void apply_uniform_subdivision(float step_size);
 
     private:
+        DrawingType draw_t;
         vector<BezierPatch*> patches;
         Transform<float,3,Affine> t;
         Vector3f normal, right;
