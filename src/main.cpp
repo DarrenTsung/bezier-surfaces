@@ -38,7 +38,8 @@ void handleInput(unsigned char key, int x, int y)
         mainBez.transform(SCALE, Vector3f(0.8,0.8,0.8));
         display();
         break;
-    case '+':
+	case '+':
+    case '=':
         mainBez.transform(SCALE, Vector3f(1.2,1.2,1.2));
         display();
         break;
@@ -124,7 +125,7 @@ int main(int argc, char* argv[]) {
     if (argc > 1) {
         mainBez.parsePatchfile(argv[1]);
         float subdivision_param = atof(argv[2]);
-        string type = (argc > 3) ? argv[3] : "-u";
+        String type = (argc > 3) ? argv[3] : "-u";
         if (type == "-u") {
             mainBez.apply_uniform_subdivision(subdivision_param);
         } else if (type == "-a") {
