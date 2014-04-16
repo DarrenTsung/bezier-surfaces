@@ -79,8 +79,8 @@ void BezierPatch::draw(Transform<float,3,Affine> T) {
     vector<vector<Point3f*> > p = this->uniform_p;
 
     // draw each quad of the patch
-    for(int i=0; i<p.size()-1; i++) {
-        for(int j=0; j<p[i].size()-1; j++) {
+    for(unsigned int i=0; i<p.size()-1; i++) {
+        for(unsigned int j=0; j<p[i].size()-1; j++) {
             glBegin(GL_QUADS);
             // counter-clockwise order
             Point3f a = T * (*(p[i+1][j]));
