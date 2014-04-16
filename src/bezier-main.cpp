@@ -67,7 +67,7 @@ void BezierMain::parsePatchfile(char *filename) {
 }
 
 void BezierMain::apply_uniform_subdivision(float step_size) {
-    for(int i=0; i<patches.size(); i++) {
+    for(unsigned int i=0; i<patches.size(); i++) {
         patches[i]->uniform_subdivision(step_size);
     }
 }
@@ -75,7 +75,7 @@ void BezierMain::apply_uniform_subdivision(float step_size) {
 void BezierMain::draw() {
     // to go to wireframe mode
     glPolygonMode( GL_FRONT_AND_BACK, GL_LINE );
-    for(int i=0; i<patches.size(); i++) {
+    for(unsigned int i=0; i<patches.size(); i++) {
         patches[i]->draw(t);
     }
     // to go back to normal mode
