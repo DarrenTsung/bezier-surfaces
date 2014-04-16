@@ -105,9 +105,9 @@ void BezierMain::transform(TransformationType a, Vector3f amount) {
 }
 
 Vector3f BezierMain::get_normal() {
-    return t.linear() * normal;
+    return (t.linear() * normal).normalized();
 }
 
 Vector3f BezierMain::get_right() {
-    return t.linear() * right;
+    return (t.linear() * right).normalized();
 }

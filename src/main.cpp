@@ -66,7 +66,7 @@ void handleSpecialKeypress(int key, int x, int y) {
                 mainBez.transform(TRANSLATION, Vector3f(-0.05,0,0));
             } else {
                 // rotate it around the normal
-                mainBez.transform(ROTATION, mainBez.get_normal(), 5);
+                mainBez.transform(ROTATION, mainBez.get_normal(), 8);
             }
             break;
 
@@ -78,7 +78,7 @@ void handleSpecialKeypress(int key, int x, int y) {
                 mainBez.transform(TRANSLATION, Vector3f(0.05,0,0));
             } else {
                 // rotate it around the normal
-                mainBez.transform(ROTATION, mainBez.get_normal(), -5);
+                mainBez.transform(ROTATION, mainBez.get_normal(), -8);
             }
             break;
 
@@ -90,7 +90,7 @@ void handleSpecialKeypress(int key, int x, int y) {
                 mainBez.transform(TRANSLATION, Vector3f(0,0.05,0));
             } else {
                 // rotate it around the right vector
-                mainBez.transform(ROTATION, mainBez.get_right(), -5);
+                mainBez.transform(ROTATION, mainBez.get_right(), -8);
             }
             break;
 
@@ -102,7 +102,7 @@ void handleSpecialKeypress(int key, int x, int y) {
                 mainBez.transform(TRANSLATION, Vector3f(0,-0.05,0));
             } else {
                 // rotate it around the right vector
-                mainBez.transform(ROTATION, mainBez.get_right(), 5);
+                mainBez.transform(ROTATION, mainBez.get_right(), 8);
             }
             break;
     }
