@@ -132,7 +132,7 @@ int main(int argc, char* argv[]) {
         if (type == "-u") {
             mainBez.apply_uniform_subdivision(subdivision_param);
         } else if (type == "-a") {
-            // CREATE ADAPTIVE HERE
+            mainBez.apply_adaptive_subdivision(subdivision_param);
         }
     } else {
         cout << "No filename inputted." << endl;

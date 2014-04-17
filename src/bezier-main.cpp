@@ -73,6 +73,12 @@ void BezierMain::apply_uniform_subdivision(float step_size) {
     }
 }
 
+void BezierMain::apply_adaptive_subdivision(float error) {
+    for(unsigned int i=0; i<patches.size(); i++) {
+        patches[i]->adaptive_subdivision(error);
+    }
+}
+
 void BezierMain::draw() {
     if (draw_t == WIREFRAME) {
         // to go to wireframe mode

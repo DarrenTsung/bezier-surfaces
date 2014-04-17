@@ -35,6 +35,7 @@ class BezierMain {
         void toggle_draw_mode();
 
         void apply_uniform_subdivision(float step_size);
+        void apply_adaptive_subdivision(float error);
 
     private:
         DrawingType draw_t;

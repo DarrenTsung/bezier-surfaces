@@ -7,17 +7,22 @@ class BezierPatch {
     private:
         // control points
         vector<vector<Point3f*> > p;
-        // subdivision
+        // uniform subdivision
         vector<vector<Point3f*> > uniform_p;
+        // adaptive subdivision
+        vector<vector<Point3f*> > adaptive_p;
 
         Point3f* calculateUVpoint(float u, float v);
         Matrix4f getDimensionMatrixOfPoints(int spec);
+
+        void subdivide_triangle(vector<Point3f *>verts, vector<Vector2f *>uv_verts, float err_margin);
 
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
         // subdivision methods
         void uniform_subdivision(float step_size);
+        void adaptive_subdivision(float error);
 
 
         // constructors
