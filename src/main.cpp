@@ -168,9 +168,9 @@ int main(int argc, char* argv[]) {
 	glEnable(GL_DEPTH_TEST);
 	
 	// random light behind your eyes
-	GLfloat diffuse0[]={1.0, 0.0, 1.0, 1.0};
-	GLfloat ambient0[]={1.0, 0.0, 1.0, 1.0};
-	GLfloat specular0[]={1.0, 0.0, 1.0, 1.0};
+	GLfloat diffuse0[]={1.0, 1.0, 1.0, 1.0};
+	GLfloat ambient0[]={1.0, 1.0, 1.0, 1.0};
+	GLfloat specular0[]={1.0, 1.0, 1.0, 1.0};
 	GLfloat light0_pos[]={0.0, 0.0, 5.0, 1.0};
 	
 	glEnable(GL_LIGHT0);

@@ -1,5 +1,49 @@
 #include "bezier-patch.h"
 
+// does more mathematical magic
+Vector3f* bez_curve_interp(vector<Point3f*> curve, float u) {
+	Vector3f A = *(curve[0]) * (1.0 - u) + *(curve[1]) * u;
+	Vector3f B = *(curve[1]) * (1.0 - u) + *(curve[2]) * u;
+	Vector3f C = *(curve[2]) * (1.0 - u) + *(curve[3]) * u;
+	
+	Vector3f D = A * (1.0 - u) + B * u;
+	Vector3f E = B * (1.0 - u) + C * u;
+	
+	Vector3f* dPdu = new Vector3f(3 * (E - D));
+	return dPdu;
+}
+
+// does magic
+Vector3f* bez_patch_interp(vector<vector<Point3f*> > patch, float u, float v) {
+	vector<Point3f*> ucurve;
+	vector<Point3f*> vcurve;
+	
+	vector<vector<Point3f*> > upatch;
+	for(unsigned int i = 0; i < patch[0].size(); i++) {
+		upatch.push_back(vector<Point3f*>());
+		for(unsigned int j = 0; j < patch.size(); j++) {
+			upatch[i].push_back(patch[j][i]);
+		}
+	}
+	
+	ucurve.push_back(bez_curve_interp(upatch[0], v));
+	ucurve.push_back(bez_curve_interp(upatch[1], v));
+	ucurve.push_back(bez_curve_interp(upatch[2], v));
+	ucurve.push_back(bez_curve_interp(upatch[3], v));
+	
+	vcurve.push_back(bez_curve_interp(patch[0], u));
+	vcurve.push_back(bez_curve_interp(patch[1], u));
+	vcurve.push_back(bez_curve_interp(patch[2], u));
+	vcurve.push_back(bez_curve_interp(patch[3], u));
+	
+	Vector3f dPdu = *bez_curve_interp(ucurve, u);
+	Vector3f dPdv = *bez_curve_interp(vcurve, v);
+	
+	Vector3f* n = new Vector3f(dPdu.cross(dPdv));
+	return n;
+}
+
+
 void BezierPatch::adaptive_subdivision(float error) {
     float step_size = (1.0f / p.size());
 
@@ -326,7 +370,7 @@ void BezierPatch::subdivide_triangle(vector<Point3f *>verts, vector<Vector2f *>u
         triangle_uv_verts.push_back(uvs3);
     }
 
-    for(int i=0; i<triangle_verts.size(); i++) {
+    for(unsigned int i=0; i<triangle_verts.size(); i++) {
         subdivide_triangle(triangle_verts[i], triangle_uv_verts[i], err_margin);
     }
 }
@@ -379,9 +423,9 @@ Matrix4f BezierPatch::getDimensionMatrixOfPoints(int spec) {
     Matrix4f m;
     // pull out the value you want from the points and create a 4x4 matrix
     m << (*(p[0][0]))[spec], (*(p[0][1]))[spec], (*(p[0][2]))[spec], (*(p[0][3]))[spec],
-        (*(p[1][0]))[spec], (*(p[1][1]))[spec], (*(p[1][2]))[spec], (*(p[1][3]))[spec],
-        (*(p[2][0]))[spec], (*(p[2][1]))[spec], (*(p[2][2]))[spec], (*(p[2][3]))[spec],
-        (*(p[3][0]))[spec], (*(p[3][1]))[spec], (*(p[3][2]))[spec], (*(p[3][3]))[spec];
+         (*(p[1][0]))[spec], (*(p[1][1]))[spec], (*(p[1][2]))[spec], (*(p[1][3]))[spec],
+         (*(p[2][0]))[spec], (*(p[2][1]))[spec], (*(p[2][2]))[spec], (*(p[2][3]))[spec],
+         (*(p[3][0]))[spec], (*(p[3][1]))[spec], (*(p[3][2]))[spec], (*(p[3][3]))[spec];
     return m;
 }
 
@@ -413,20 +457,29 @@ void BezierPatch::draw(Transform<float,3,Affine> T) {
         // draw each quad of the patch
         for(unsigned int i=0; i<uniform_p.size()-1; i++) {
             for(unsigned int j=0; j<uniform_p[i].size()-1; j++) {
-                Point3f a0 = T * (*(uniform_p[i+1][j]));
+				Point3f a0 = T * (*(uniform_p[i+1][j]));
                 Point3f a1 = T * (*(uniform_p[i][j]));
                 Point3f a2 = T * (*(uniform_p[i][j+1]));
                 Point3f a3 = T * (*(uniform_p[i+1][j+1]));
 
+				Vector3f n0 = (a3 - a0).cross(a1 - a0);
+				Vector3f n1 = (a0 - a1).cross(a2 - a1);
+				Vector3f n2 = (a1 - a2).cross(a3 - a2);
+				Vector3f n3 = (a2 - a3).cross(a0 - a3);
+				
+				
                 glBegin(GL_QUADS);
-                    Vector3f n = (a3 - a0).cross(a1 - a0);
-                    glNormal3f(n[0], n[1], n[2]);
-
-                    // counter-clockwise order
+                    glNormal3f(n0[0], n0[1], n0[2]);
                     glVertex3f(a0[0], a0[1], a0[2]);
-                    glVertex3f(a1[0], a1[1], a1[2]);
-                    glVertex3f(a2[0], a2[1], a2[2]);
-                    glVertex3f(a3[0], a3[1], a3[2]);
+
+					glNormal3f(n1[0], n1[1], n1[2]);
+					glVertex3f(a1[0], a1[1], a1[2]);
+                    
+					glNormal3f(n2[0], n2[1], n2[2]);
+					glVertex3f(a2[0], a2[1], a2[2]);
+                    
+					glNormal3f(n3[0], n3[1], n3[2]);
+					glVertex3f(a3[0], a3[1], a3[2]);
                 glEnd();
             }
         }
@@ -437,13 +490,20 @@ void BezierPatch::draw(Transform<float,3,Affine> T) {
             Point3f a1 = T * (*(adaptive_p[i][1]));
             Point3f a2 = T * (*(adaptive_p[i][2]));
 
+			Vector3f n0 = (a2 - a0).cross(a1 - a0);
+			Vector3f n1 = (a0 - a1).cross(a2 - a1);
+			Vector3f n2 = (a1 - a2).cross(a0 - a2);
+			
+			
             glBegin(GL_TRIANGLES);
-                Vector3f n = (a2 - a0).cross(a1 - a0);
-                glNormal3f(n[0], n[1], n[2]);
-
-                // counter-clockwise
+				// counter-clockwise
+                glNormal3f(n0[0], n0[1], n0[2]);
                 glVertex3f(a0[0], a0[1], a0[2]);
-                glVertex3f(a1[0], a1[1], a1[2]);
+                
+				glNormal3f(n1[0], n1[1], n1[2]);
+				glVertex3f(a1[0], a1[1], a1[2]);
+				
+				glNormal3f(n2[0], n2[1], n2[2]);
                 glVertex3f(a2[0], a2[1], a2[2]);
             glEnd();
         }
@@ -461,3 +521,4 @@ void BezierPatch::set_matrix(vector<vector<Point3f*> > a) {
         }
     }
 }
+
