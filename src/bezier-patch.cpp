@@ -104,7 +104,13 @@ void BezierPatch::subdivide_triangle(vector<Point3f *>verts, vector<Vector2f *>u
     vector< vector<Vector2f*> > triangle_uv_verts;
     if (count == 3) {
         // DON'T SUBDIVIDE
-        adaptive_p.push_back(verts);
+        vector<Vector3f*> normals;
+		normals.push_back(calculateUVnormal((*uv_verts[0])[0], (*uv_verts[0])[1]));
+		normals.push_back(calculateUVnormal((*uv_verts[1])[0], (*uv_verts[1])[1]));
+		normals.push_back(calculateUVnormal((*uv_verts[2])[0], (*uv_verts[2])[1]));
+		
+		adaptive_n.push_back(normals);
+		adaptive_p.push_back(verts);
         return;
     } else if (count == 2) {
         // if a1 is the failing test
