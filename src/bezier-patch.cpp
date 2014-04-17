@@ -111,67 +111,67 @@ void BezierPatch::subdivide_triangle(vector<Point3f *>verts, vector<Vector2f *>u
         if (!a1) {
             vector<Point3f*> vs;
             vs.push_back(verts[0]);
-            vs.push_back(verts[2]);
             vs.push_back(u1);
+            vs.push_back(verts[2]);
             triangle_verts.push_back(vs);
             vector<Vector2f*> uvs;
             uvs.push_back(uv_verts[0]);
-            uvs.push_back(uv_verts[2]);
             uvs.push_back(uv1);
+            uvs.push_back(uv_verts[2]);
             triangle_uv_verts.push_back(uvs);
             vector<Point3f*> vs1;
             vs1.push_back(verts[2]);
-            vs1.push_back(verts[1]);
             vs1.push_back(u1);
+            vs1.push_back(verts[1]);
             triangle_verts.push_back(vs1);
             vector<Vector2f*> uvs1;
             uvs1.push_back(uv_verts[2]);
-            uvs1.push_back(uv_verts[1]);
             uvs1.push_back(uv1);
+            uvs1.push_back(uv_verts[1]);
             triangle_uv_verts.push_back(uvs1);
         }
         else if (!a2) {
             vector<Point3f*> vs;
             vs.push_back(u2);
-            vs.push_back(verts[1]);
             vs.push_back(verts[0]);
+            vs.push_back(verts[1]);
             triangle_verts.push_back(vs);
             vector<Vector2f*> uvs;
             uvs.push_back(uv2);
-            uvs.push_back(uv_verts[1]);
             uvs.push_back(uv_verts[0]);
+            uvs.push_back(uv_verts[1]);
             triangle_uv_verts.push_back(uvs);
             vector<Point3f*> vs1;
             vs1.push_back(verts[0]);
-            vs1.push_back(verts[2]);
             vs1.push_back(u2);
+            vs1.push_back(verts[2]);
             triangle_verts.push_back(vs1);
             vector<Vector2f*> uvs1;
             uvs1.push_back(uv_verts[0]);
-            uvs1.push_back(uv_verts[2]);
             uvs1.push_back(uv2);
+            uvs1.push_back(uv_verts[2]);
             triangle_uv_verts.push_back(uvs1);
         }
         else if (!a3) {
             vector<Point3f*> vs;
             vs.push_back(verts[0]);
-            vs.push_back(u3);
             vs.push_back(verts[1]);
+            vs.push_back(u3);
             triangle_verts.push_back(vs);
             vector<Vector2f*> uvs;
             uvs.push_back(uv_verts[0]);
-            uvs.push_back(uv3);
             uvs.push_back(uv_verts[1]);
+            uvs.push_back(uv3);
             triangle_uv_verts.push_back(uvs);
             vector<Point3f*> vs1;
             vs1.push_back(verts[1]);
-            vs1.push_back(u3);
             vs1.push_back(verts[2]);
+            vs1.push_back(u3);
             triangle_verts.push_back(vs1);
             vector<Vector2f*> uvs1;
             uvs1.push_back(uv_verts[1]);
-            uvs1.push_back(uv3);
             uvs1.push_back(uv_verts[2]);
+            uvs1.push_back(uv3);
             triangle_uv_verts.push_back(uvs1);
         }
     }
@@ -180,142 +180,150 @@ void BezierPatch::subdivide_triangle(vector<Point3f *>verts, vector<Vector2f *>u
             if (!a2) {
                 vector<Point3f*> vs;
                 vs.push_back(verts[1]);
-                vs.push_back(u1);
                 vs.push_back(u2);
+                vs.push_back(u1);
                 triangle_verts.push_back(vs);
                 vector<Vector2f*> uvs;
                 uvs.push_back(uv_verts[1]);
-                uvs.push_back(uv1);
                 uvs.push_back(uv2);
+                uvs.push_back(uv1);
                 triangle_uv_verts.push_back(uvs);
 
                 vector<Point3f*> vs1;
                 vs1.push_back(u1);
-                vs1.push_back(verts[2]);
                 vs1.push_back(u2);
+                vs1.push_back(verts[2]);
                 triangle_verts.push_back(vs1);
                 vector<Vector2f*> uvs1;
                 uvs1.push_back(uv1);
-                uvs1.push_back(uv_verts[2]);
                 uvs1.push_back(uv2);
+                uvs1.push_back(uv_verts[2]);
                 triangle_uv_verts.push_back(uvs1);
 
                 vector<Point3f*> vs2;
                 vs2.push_back(verts[0]);
-                vs2.push_back(verts[2]);
                 vs2.push_back(u1);
+                vs2.push_back(verts[2]);
                 triangle_verts.push_back(vs2);
                 vector<Vector2f*> uvs2;
                 uvs2.push_back(uv_verts[0]);
-                uvs2.push_back(uv_verts[2]);
                 uvs2.push_back(uv1);
+                uvs2.push_back(uv_verts[2]);
                 triangle_uv_verts.push_back(uvs2);
             } else if (!a3) {
-                //cout << "hmmm? " << endl;
                 vector<Point3f*> vs;
                 vs.push_back(verts[0]);
-                vs.push_back(u3);
                 vs.push_back(u1);
+                vs.push_back(u3);
                 triangle_verts.push_back(vs);
                 vector<Vector2f*> uvs;
                 uvs.push_back(uv_verts[0]);
-                uvs.push_back(uv3);
                 uvs.push_back(uv1);
+                uvs.push_back(uv3);
                 triangle_uv_verts.push_back(uvs);
-
-                //cout << "... : " << *(triangle_verts[0][1]) << endl;
 
                 vector<Point3f*> vs1;
                 vs1.push_back(u3);
-                vs1.push_back(verts[2]);
                 vs1.push_back(u1);
+                vs1.push_back(verts[2]);
                 triangle_verts.push_back(vs1);
                 vector<Vector2f*> uvs1;
                 uvs1.push_back(uv3);
-                uvs1.push_back(uv_verts[2]);
                 uvs1.push_back(uv1);
+                uvs1.push_back(uv_verts[2]);
                 triangle_uv_verts.push_back(uvs1);
 
                 vector<Point3f*> vs2;
                 vs2.push_back(verts[2]);
-                vs2.push_back(verts[1]);
                 vs2.push_back(u1);
+                vs2.push_back(verts[1]);
                 triangle_verts.push_back(vs2);
                 vector<Vector2f*> uvs2;
                 uvs2.push_back(uv_verts[2]);
-                uvs2.push_back(uv_verts[1]);
                 uvs2.push_back(uv1);
+                uvs2.push_back(uv_verts[1]);
                 triangle_uv_verts.push_back(uvs2);
             }
         } else if (!a2) {
             if (!a3) {
                 vector<Point3f*> vs;
                 vs.push_back(u3);
-                vs.push_back(verts[2]);
                 vs.push_back(u2);
+                vs.push_back(verts[2]);
                 triangle_verts.push_back(vs);
                 vector<Vector2f*> uvs;
                 uvs.push_back(uv3);
-                uvs.push_back(uv_verts[2]);
                 uvs.push_back(uv2);
+                uvs.push_back(uv_verts[2]);
                 triangle_uv_verts.push_back(uvs);
 
                 vector<Point3f*> vs1;
                 vs1.push_back(u2);
-                vs1.push_back(verts[1]);
                 vs1.push_back(u3);
+                vs1.push_back(verts[1]);
                 triangle_verts.push_back(vs1);
                 vector<Vector2f*> uvs1;
                 uvs1.push_back(uv2);
-                uvs1.push_back(uv_verts[1]);
                 uvs1.push_back(uv3);
+                uvs1.push_back(uv_verts[1]);
                 triangle_uv_verts.push_back(uvs1);
 
                 vector<Point3f*> vs2;
                 vs2.push_back(verts[1]);
-                vs2.push_back(verts[0]);
                 vs2.push_back(u3);
+                vs2.push_back(verts[0]);
                 triangle_verts.push_back(vs2);
                 vector<Vector2f*> uvs2;
                 uvs2.push_back(uv_verts[1]);
-                uvs2.push_back(uv_verts[0]);
                 uvs2.push_back(uv3);
+                uvs2.push_back(uv_verts[0]);
                 triangle_uv_verts.push_back(uvs2);
             }
         }
     } else if (count == 0) {
         vector<Point3f*> vs;
         vs.push_back(u3);
-        vs.push_back(verts[2]);
         vs.push_back(u2);
+        vs.push_back(verts[2]);
         triangle_verts.push_back(vs);
         vector<Vector2f*> uvs;
         uvs.push_back(uv3);
-        uvs.push_back(uv_verts[2]);
         uvs.push_back(uv2);
+        uvs.push_back(uv_verts[2]);
         triangle_uv_verts.push_back(uvs);
 
         vector<Point3f*> vs1;
         vs1.push_back(u2);
-        vs1.push_back(verts[1]);
         vs1.push_back(u1);
+        vs1.push_back(verts[1]);
         triangle_verts.push_back(vs1);
         vector<Vector2f*> uvs1;
         uvs1.push_back(uv2);
-        uvs1.push_back(uv_verts[1]);
         uvs1.push_back(uv1);
+        uvs1.push_back(uv_verts[1]);
         triangle_uv_verts.push_back(uvs1);
 
         vector<Point3f*> vs2;
         vs2.push_back(verts[0]);
-        vs2.push_back(u3);
         vs2.push_back(u1);
+        vs2.push_back(u3);
         triangle_verts.push_back(vs2);
         vector<Vector2f*> uvs2;
         uvs2.push_back(uv_verts[0]);
-        uvs2.push_back(uv3);
         uvs2.push_back(uv1);
+        uvs2.push_back(uv3);
         triangle_uv_verts.push_back(uvs2);
+
+        vector<Point3f*> vs3;
+        vs3.push_back(u2);
+        vs3.push_back(u3);
+        vs3.push_back(u1);
+        triangle_verts.push_back(vs3);
+        vector<Vector2f*> uvs3;
+        uvs3.push_back(uv2);
+        uvs3.push_back(uv3);
+        uvs3.push_back(uv1);
+        triangle_uv_verts.push_back(uvs3);
     }
 
     for(int i=0; i<triangle_verts.size(); i++) {
@@ -403,12 +411,12 @@ BezierPatch::BezierPatch(vector<vector<Point3f*> > a) {
 void BezierPatch::draw(Transform<float,3,Affine> T) {
     if (draw_t == UNIFORM) {
         // draw each quad of the patch
-        for(unsigned int i=0; i<p.size()-1; i++) {
-            for(unsigned int j=0; j<p[i].size()-1; j++) {
-                Point3f a0 = T * (*(p[i+1][j]));
-                Point3f a1 = T * (*(p[i][j]));
-                Point3f a2 = T * (*(p[i][j+1]));
-                Point3f a3 = T * (*(p[i+1][j+1]));
+        for(unsigned int i=0; i<uniform_p.size()-1; i++) {
+            for(unsigned int j=0; j<uniform_p[i].size()-1; j++) {
+                Point3f a0 = T * (*(uniform_p[i+1][j]));
+                Point3f a1 = T * (*(uniform_p[i][j]));
+                Point3f a2 = T * (*(uniform_p[i][j+1]));
+                Point3f a3 = T * (*(uniform_p[i+1][j+1]));
 
                 glBegin(GL_QUADS);
                     Vector3f n = (a3 - a0).cross(a1 - a0);
