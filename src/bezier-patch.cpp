@@ -1,49 +1,5 @@
 #include "bezier-patch.h"
 
-// does more mathematical magic
-Vector3f* bez_curve_interp(vector<Point3f*> curve, float u) {
-	Vector3f A = *(curve[0]) * (1.0 - u) + *(curve[1]) * u;
-	Vector3f B = *(curve[1]) * (1.0 - u) + *(curve[2]) * u;
-	Vector3f C = *(curve[2]) * (1.0 - u) + *(curve[3]) * u;
-	
-	Vector3f D = A * (1.0 - u) + B * u;
-	Vector3f E = B * (1.0 - u) + C * u;
-	
-	Vector3f* dPdu = new Vector3f(3 * (E - D));
-	return dPdu;
-}
-
-// does magic
-Vector3f* bez_patch_interp(vector<vector<Point3f*> > patch, float u, float v) {
-	vector<Point3f*> ucurve;
-	vector<Point3f*> vcurve;
-	
-	vector<vector<Point3f*> > upatch;
-	for(unsigned int i = 0; i < patch[0].size(); i++) {
-		upatch.push_back(vector<Point3f*>());
-		for(unsigned int j = 0; j < patch.size(); j++) {
-			upatch[i].push_back(patch[j][i]);
-		}
-	}
-	
-	ucurve.push_back(bez_curve_interp(upatch[0], v));
-	ucurve.push_back(bez_curve_interp(upatch[1], v));
-	ucurve.push_back(bez_curve_interp(upatch[2], v));
-	ucurve.push_back(bez_curve_interp(upatch[3], v));
-	
-	vcurve.push_back(bez_curve_interp(patch[0], u));
-	vcurve.push_back(bez_curve_interp(patch[1], u));
-	vcurve.push_back(bez_curve_interp(patch[2], u));
-	vcurve.push_back(bez_curve_interp(patch[3], u));
-	
-	Vector3f dPdu = *bez_curve_interp(ucurve, u);
-	Vector3f dPdv = *bez_curve_interp(vcurve, v);
-	
-	Vector3f* n = new Vector3f(dPdu.cross(dPdv));
-	return n;
-}
-
-
 void BezierPatch::adaptive_subdivision(float error) {
     float step_size = (1.0f / p.size());
 
@@ -378,18 +334,19 @@ void BezierPatch::subdivide_triangle(vector<Point3f *>verts, vector<Vector2f *>u
 void BezierPatch::uniform_subdivision(float step_size) {
     // compute number of subdivisions for step-size
     int num_subdivisions = ((1.0f + 0.0005f) / step_size);
-
+	
     for(int i=0; i<=num_subdivisions; i++) {
         // create new rows for the new 2D vector
         vector<Point3f*> row(num_subdivisions+1);
-        uniform_p.push_back(row);
+		uniform_p.push_back(row);
+		uniform_n.push_back(row);
 
         float u = i*step_size;
         for(int j=0; j<=num_subdivisions; j++) {
             float v = j*step_size;
-
-            Point3f *point = calculateUVpoint(u, v);
-            uniform_p[i][j] = point;
+			
+            uniform_p[i][j] = calculateUVpoint(u, v);
+			uniform_n[i][j] = calculateUVnormal(u, v);
         }
     }
 }
@@ -417,6 +374,20 @@ Point3f* BezierPatch::calculateUVpoint(float u, float v) {
 
     Point3f *p = new Point3f(x, y, z);
     return p;
+}
+
+Vector3f* BezierPatch::calculateUVnormal(float u, float v, float uv_delta) {
+	Point3f* p = calculateUVpoint(u, v);
+	Point3f* p_u = calculateUVpoint(u + uv_delta, v);
+	Point3f* p_v = calculateUVpoint(u, v + uv_delta);
+	
+	Point3f* n = new Vector3f((*p_u - *p).cross(*p_v - *p));
+	
+	if(*n == Vector3f(0.0, 0.0, 0.0)) {
+		delete n;
+		n = calculateUVnormal(u + uv_delta, v + uv_delta);
+	}
+	return n;
 }
 
 Matrix4f BezierPatch::getDimensionMatrixOfPoints(int spec) {
@@ -462,10 +433,10 @@ void BezierPatch::draw(Transform<float,3,Affine> T) {
                 Point3f a2 = T * (*(uniform_p[i][j+1]));
                 Point3f a3 = T * (*(uniform_p[i+1][j+1]));
 
-				Vector3f n0 = (a3 - a0).cross(a1 - a0);
-				Vector3f n1 = (a0 - a1).cross(a2 - a1);
-				Vector3f n2 = (a1 - a2).cross(a3 - a2);
-				Vector3f n3 = (a2 - a3).cross(a0 - a3);
+				Vector3f n0 = T.linear() * (*(uniform_n[i+1][j]));
+				Vector3f n1 = T.linear() * (*(uniform_n[i]  [j]));
+				Vector3f n2 = T.linear() * (*(uniform_n[i]  [j+1]));
+				Vector3f n3 = T.linear() * (*(uniform_n[i+1][j+1]));
 				
 				
                 glBegin(GL_QUADS);
@@ -490,9 +461,9 @@ void BezierPatch::draw(Transform<float,3,Affine> T) {
             Point3f a1 = T * (*(adaptive_p[i][1]));
             Point3f a2 = T * (*(adaptive_p[i][2]));
 
-			Vector3f n0 = (a2 - a0).cross(a1 - a0);
-			Vector3f n1 = (a0 - a1).cross(a2 - a1);
-			Vector3f n2 = (a1 - a2).cross(a0 - a2);
+			Vector3f n0 = T.linear() * (*(adaptive_n[i][0]));
+			Vector3f n1 = T.linear() * (*(adaptive_n[i][1]));
+			Vector3f n2 = T.linear() * (*(adaptive_n[i][2]));
 			
 			
             glBegin(GL_TRIANGLES);

@@ -13,6 +13,10 @@ class BezierPatch {
         // determines what points to draw
         TessDrawType draw_t;
 
+		// normals
+		vector<vector<Point3f*> > uniform_n;
+		vector<vector<Point3f*> > adaptive_n;
+		
         // control points
         vector<vector<Point3f*> > p;
         // uniform subdivision
@@ -21,10 +25,11 @@ class BezierPatch {
         vector<vector<Point3f*> > adaptive_p;
 
         Point3f* calculateUVpoint(float u, float v);
+		Vector3f* calculateUVnormal(float u, float v, float uv_delta = 0.0001);
         Matrix4f getDimensionMatrixOfPoints(int spec);
 
         void subdivide_triangle(vector<Point3f *>verts, vector<Vector2f *>uv_verts, float err_margin);
-
+		
     public:
         EIGEN_MAKE_ALIGNED_OPERATOR_NEW
 
