@@ -6,7 +6,7 @@ using namespace std;
 BezierMain mainBez;
 
 void display() {
-    glClear(GL_COLOR_BUFFER_BIT);				// clear the color buffer
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				// clear the color buffer
 
     glMatrixMode(GL_MODELVIEW);			        // indicate we are specifying camera transformations
     glLoadIdentity();				        // make sure transformation is "zero'd"
@@ -38,7 +38,8 @@ void handleInput(unsigned char key, int x, int y)
         mainBez.transform(SCALE, Vector3f(0.8,0.8,0.8));
         display();
         break;
-    case '+':
+	case '+':
+    case '=':
         mainBez.transform(SCALE, Vector3f(1.2,1.2,1.2));
         display();
         break;
@@ -46,6 +47,10 @@ void handleInput(unsigned char key, int x, int y)
         mainBez.toggle_draw_mode();
         display();
         break;
+	case 's':
+		mainBez.toggle_shading_mode();
+		display();
+		break;
     }
 }
 
@@ -128,7 +133,7 @@ int main(int argc, char* argv[]) {
     if (argc > 1) {
         mainBez.parsePatchfile(argv[1]);
         float subdivision_param = atof(argv[2]);
-        string type = argv[3];
+        String type = (argc > 3) ? argv[3] : "-u";
         if (type == "-u") {
             mainBez.apply_uniform_subdivision(subdivision_param);
         } else if (type == "-a") {
@@ -142,7 +147,7 @@ int main(int argc, char* argv[]) {
     glutInit(&argc, argv);
 
     //This tells glut to use a double-buffered window with red, green, and blue channels
-    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB);
+    glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 
     glutInitWindowSize(500, 500);
     glutInitWindowPosition(0, 0);
@@ -157,6 +162,23 @@ int main(int argc, char* argv[]) {
     glutSpecialFunc(handleSpecialKeypress);
     glutSpecialUpFunc(handleSpecialKeyReleased);
 
+	// shading stuff?
+	glEnable(GL_NORMALIZE);
+	glEnable(GL_LIGHTING);
+	glEnable(GL_DEPTH_TEST);
+	
+	// random light behind your eyes
+	GLfloat diffuse0[]={1.0, 0.0, 1.0, 1.0};
+	GLfloat ambient0[]={1.0, 0.0, 1.0, 1.0};
+	GLfloat specular0[]={1.0, 0.0, 1.0, 1.0};
+	GLfloat light0_pos[]={0.0, 0.0, 5.0, 1.0};
+	
+	glEnable(GL_LIGHT0);
+	glLightfv(GL_LIGHT0, GL_POSITION, light0_pos);
+	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient0);
+	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse0);
+	glLightfv(GL_LIGHT0, GL_SPECULAR, specular0);
+	
     glutMainLoop();
 
     return 0;

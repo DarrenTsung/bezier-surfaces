@@ -7,6 +7,7 @@ BezierMain::BezierMain() {
     normal = Vector3f(0,0,1);
     right = Vector3f(1,0,0);
     draw_t = WIREFRAME;
+	shading_t = SMOOTH;
 }
 
 void BezierMain::parsePatchfile(char *filename) {
@@ -88,6 +89,13 @@ void BezierMain::draw() {
         // to go back to normal mode
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
+	
+	if(shading_t == SMOOTH) {
+		glShadeModel(GL_SMOOTH);
+	} else if(shading_t == FLAT) {
+		glShadeModel(GL_FLAT);
+	}
+	
     for(unsigned int i=0; i<patches.size(); i++) {
         patches[i]->draw(t);
     }
@@ -129,6 +137,14 @@ void BezierMain::set_fill_mode() {
 
 void BezierMain::set_wireframe_mode() {
     draw_t = WIREFRAME;
+}
+
+void BezierMain::toggle_shading_mode() {
+	if (shading_t == FLAT) {
+		shading_t = SMOOTH;
+	} else {
+		shading_t = FLAT;
+	}
 }
 
 void BezierMain::toggle_draw_mode() {

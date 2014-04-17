@@ -3,8 +3,16 @@
 
 #include "include.h"
 
+typedef enum {
+    UNIFORM,
+    ADAPTIVE
+} TessDrawType;
+
 class BezierPatch {
     private:
+        // determines what points to draw
+        TessDrawType draw_t;
+
         // control points
         vector<vector<Point3f*> > p;
         // uniform subdivision

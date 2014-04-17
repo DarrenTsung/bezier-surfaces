@@ -43,6 +43,8 @@ void BezierPatch::adaptive_subdivision(float error) {
             subdivide_triangle(vs1, uvs1, error);
         }
     }
+
+    draw_t = ADAPTIVE;
 }
 
 void BezierPatch::subdivide_triangle(vector<Point3f *>verts, vector<Vector2f *>uv_verts, float err_margin) {
@@ -381,6 +383,7 @@ BezierPatch::BezierPatch() {
         vector<Point3f*> row(4);
         p.push_back(row);
     }
+    draw_t = UNIFORM;
 }
 
 BezierPatch::BezierPatch(vector<vector<Point3f*> > a) {
@@ -394,43 +397,46 @@ BezierPatch::BezierPatch(vector<vector<Point3f*> > a) {
             p[i][j] = a[i][j];
         }
     }
+    draw_t = UNIFORM;
 }
 
 void BezierPatch::draw(Transform<float,3,Affine> T) {
-
-    //if (draw_t == UNIFORM) {
-    if (false) {
-        vector<vector<Point3f*> > p = this->uniform_p;
-
+    if (draw_t == UNIFORM) {
         // draw each quad of the patch
         for(unsigned int i=0; i<p.size()-1; i++) {
             for(unsigned int j=0; j<p[i].size()-1; j++) {
+                Point3f a0 = T * (*(p[i+1][j]));
+                Point3f a1 = T * (*(p[i][j]));
+                Point3f a2 = T * (*(p[i][j+1]));
+                Point3f a3 = T * (*(p[i+1][j+1]));
+
                 glBegin(GL_QUADS);
-                // counter-clockwise order
-                Point3f a = T * (*(p[i+1][j]));
-                glVertex2f(a[0], a[1]);
-                a = T * (*(p[i][j]));
-                glVertex2f(a[0], a[1]);
-                a = T * (*(p[i][j+1]));
-                glVertex2f(a[0], a[1]);
-                a = T * (*(p[i+1][j+1]));
-                glVertex2f(a[0], a[1]);
+                    Vector3f n = (a3 - a0).cross(a1 - a0);
+                    glNormal3f(n[0], n[1], n[2]);
+
+                    // counter-clockwise order
+                    glVertex3f(a0[0], a0[1], a0[2]);
+                    glVertex3f(a1[0], a1[1], a1[2]);
+                    glVertex3f(a2[0], a2[1], a2[2]);
+                    glVertex3f(a3[0], a3[1], a3[2]);
                 glEnd();
             }
         }
-    }
-
-    if (true) {
+    } else if (draw_t == ADAPTIVE) {
         for(unsigned int i=0; i<adaptive_p.size(); i++) {
             // draw each triangle
+            Point3f a0 = T * (*(adaptive_p[i][0]));
+            Point3f a1 = T * (*(adaptive_p[i][1]));
+            Point3f a2 = T * (*(adaptive_p[i][2]));
+
             glBegin(GL_TRIANGLES);
-            // counter-clockwise
-            Point3f a = T * (*(adaptive_p[i][0]));
-            glVertex2f(a[0], a[1]);
-            a = T * (*(adaptive_p[i][1]));
-            glVertex2f(a[0], a[1]);
-            a = T * (*(adaptive_p[i][2]));
-            glVertex2f(a[0], a[1]);
+                Vector3f n = (a2 - a0).cross(a1 - a0);
+                glNormal3f(n[0], n[1], n[2]);
+
+                // counter-clockwise
+                glVertex3f(a0[0], a0[1], a0[2]);
+                glVertex3f(a1[0], a1[1], a1[2]);
+                glVertex3f(a2[0], a2[1], a2[2]);
             glEnd();
         }
     }
