@@ -81,16 +81,20 @@ void BezierPatch::draw(Transform<float,3,Affine> T) {
     // draw each quad of the patch
     for(unsigned int i=0; i<p.size()-1; i++) {
         for(unsigned int j=0; j<p[i].size()-1; j++) {
+			Point3f a0 = T * (*(p[i+1][j]));
+			Point3f a1 = T * (*(p[i][j]));
+			Point3f a2 = T * (*(p[i][j+1]));
+			Point3f a3 = T * (*(p[i+1][j+1]));
+		
             glBegin(GL_QUADS);
-            // counter-clockwise order
-            Point3f a = T * (*(p[i+1][j]));
-            glVertex2f(a[0], a[1]);
-            a = T * (*(p[i][j]));
-            glVertex2f(a[0], a[1]);
-            a = T * (*(p[i][j+1]));
-            glVertex2f(a[0], a[1]);
-            a = T * (*(p[i+1][j+1]));
-            glVertex2f(a[0], a[1]);
+				Vector3f n = (a3 - a0).cross(a1 - a0);
+				glNormal3f(n[0], n[1], n[2]);
+				
+				// counter-clockwise order
+				glVertex3f(a0[0], a0[1], a0[2]);
+				glVertex3f(a1[0], a1[1], a1[2]);
+				glVertex3f(a2[0], a2[1], a2[2]);
+				glVertex3f(a3[0], a3[1], a3[2]);
             glEnd();
         }
     }

@@ -16,6 +16,11 @@ typedef enum {
     FILL
 } DrawingType;
 
+typedef enum {
+	FLAT,
+	SMOOTH
+} ShadingType;
+
 class BezierMain {
     public:
         // constructors
@@ -32,12 +37,15 @@ class BezierMain {
 
         void set_fill_mode();
         void set_wireframe_mode();
+		void toggle_shading_mode();
         void toggle_draw_mode();
 
         void apply_uniform_subdivision(float step_size);
 
     private:
         DrawingType draw_t;
+		ShadingType shading_t;
+		
         vector<BezierPatch*> patches;
         Transform<float,3,Affine> t;
         Vector3f normal, right;
