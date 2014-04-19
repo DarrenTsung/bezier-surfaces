@@ -11,6 +11,9 @@ BezierMain::BezierMain() {
 }
 
 void BezierMain::parsePatchfile(char *filename) {
+    // code for rendering the object sized in the screen
+    float max_coord = 0.0f;
+
     ifstream in(filename);
 
     String line;
@@ -48,6 +51,14 @@ void BezierMain::parsePatchfile(char *filename) {
                 sin >> value;
                 (*p)[2] = atof(value.c_str());
 
+                // code for resizing
+                float abs_x = abs((*p)[0]);
+                float abs_y = abs((*p)[1]);
+                if (abs_x > max_coord)
+                    max_coord = abs_x;
+                else if (abs_y > max_coord)
+                    max_coord = abs_y;
+
                 mat[j][k] = p;
             }
         }
@@ -66,6 +77,10 @@ void BezierMain::parsePatchfile(char *filename) {
         BezierPatch *new_patch = new BezierPatch(mat);
         patches.push_back(new_patch);
     }
+
+    // transform the points so they all fit in 0-1
+    float scale_factor = 1.0f/(max_coord * 1.2f);
+    transform(SCALE, Vector3f(scale_factor, scale_factor, scale_factor));
 }
 
 void BezierMain::apply_uniform_subdivision(float step_size) {
@@ -89,13 +104,13 @@ void BezierMain::draw() {
         // to go back to normal mode
         glPolygonMode( GL_FRONT_AND_BACK, GL_FILL );
     }
-	
+
 	if(shading_t == SMOOTH) {
 		glShadeModel(GL_SMOOTH);
 	} else if(shading_t == FLAT) {
 		glShadeModel(GL_FLAT);
 	}
-	
+
     for(unsigned int i=0; i<patches.size(); i++) {
         patches[i]->draw(t);
     }
