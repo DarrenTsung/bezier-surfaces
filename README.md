@@ -19,7 +19,7 @@ make
 
 ## Usage
 ```
-./bezier-surfaces \[.bez file\] \[-u for uniform / -a for adaptive\] \[error measurement for adaptive / spacing for uniform\]
+./bezier-surfaces [.bez file] [-u for uniform / -a for adaptive] [error measurement for adaptive / spacing for uniform]
 ```
 
  * Arrow Keys to rotate the bezier surface
