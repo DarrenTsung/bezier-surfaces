@@ -1,6 +1,6 @@
 bezier-surfaces
 ===============
-C++ implementation of uniform and adaptive tesselation of bezier patches.
+C++ implementation of uniform and adaptive tessellation of bezier patches.
 ![Screenshot](img/gif-1.gif?raw=true)
 
 
