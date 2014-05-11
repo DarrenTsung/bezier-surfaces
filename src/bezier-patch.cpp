@@ -108,7 +108,7 @@ void BezierPatch::subdivide_triangle(vector<Point3f *>verts, vector<Vector2f *>u
 		normals.push_back(calculateUVnormal((*uv_verts[0])[0], (*uv_verts[0])[1]));
 		normals.push_back(calculateUVnormal((*uv_verts[1])[0], (*uv_verts[1])[1]));
 		normals.push_back(calculateUVnormal((*uv_verts[2])[0], (*uv_verts[2])[1]));
-		
+
 		adaptive_n.push_back(normals);
 		adaptive_p.push_back(verts);
         return;
@@ -338,9 +338,13 @@ void BezierPatch::subdivide_triangle(vector<Point3f *>verts, vector<Vector2f *>u
 }
 
 void BezierPatch::uniform_subdivision(float step_size) {
+    // clear the normals and points
+    uniform_n.clear();
+    uniform_p.clear();
+
     // compute number of subdivisions for step-size
     int num_subdivisions = ((1.0f + 0.0005f) / step_size);
-	
+
     for(int i=0; i<=num_subdivisions; i++) {
         // create new rows for the new 2D vector
         vector<Point3f*> row(num_subdivisions+1);
@@ -350,7 +354,7 @@ void BezierPatch::uniform_subdivision(float step_size) {
         float u = i*step_size;
         for(int j=0; j<=num_subdivisions; j++) {
             float v = j*step_size;
-			
+
             uniform_p[i][j] = calculateUVpoint(u, v);
 			uniform_n[i][j] = calculateUVnormal(u, v);
         }
@@ -386,9 +390,9 @@ Vector3f* BezierPatch::calculateUVnormal(float u, float v, float uv_delta) {
 	Point3f* p = calculateUVpoint(u, v);
 	Point3f* p_u = calculateUVpoint(u + uv_delta, v);
 	Point3f* p_v = calculateUVpoint(u, v + uv_delta);
-	
+
 	Point3f* n = new Vector3f((*p_u - *p).cross(*p_v - *p));
-	
+
 	if(*n == Vector3f(0.0, 0.0, 0.0)) {
 		delete n;
 		n = calculateUVnormal(u + uv_delta, v + uv_delta);
@@ -443,18 +447,18 @@ void BezierPatch::draw(Transform<float,3,Affine> T) {
 				Vector3f n1 = T.linear() * (*(uniform_n[i]  [j]));
 				Vector3f n2 = T.linear() * (*(uniform_n[i]  [j+1]));
 				Vector3f n3 = T.linear() * (*(uniform_n[i+1][j+1]));
-				
-				
+
+
                 glBegin(GL_QUADS);
                     glNormal3f(n0[0], n0[1], n0[2]);
                     glVertex3f(a0[0], a0[1], a0[2]);
 
 					glNormal3f(n1[0], n1[1], n1[2]);
 					glVertex3f(a1[0], a1[1], a1[2]);
-                    
+
 					glNormal3f(n2[0], n2[1], n2[2]);
 					glVertex3f(a2[0], a2[1], a2[2]);
-                    
+
 					glNormal3f(n3[0], n3[1], n3[2]);
 					glVertex3f(a3[0], a3[1], a3[2]);
                 glEnd();
@@ -470,16 +474,16 @@ void BezierPatch::draw(Transform<float,3,Affine> T) {
 			Vector3f n0 = T.linear() * (*(adaptive_n[i][0]));
 			Vector3f n1 = T.linear() * (*(adaptive_n[i][1]));
 			Vector3f n2 = T.linear() * (*(adaptive_n[i][2]));
-			
-			
+
+
             glBegin(GL_TRIANGLES);
 				// counter-clockwise
                 glNormal3f(n0[0], n0[1], n0[2]);
                 glVertex3f(a0[0], a0[1], a0[2]);
-                
+
 				glNormal3f(n1[0], n1[1], n1[2]);
 				glVertex3f(a1[0], a1[1], a1[2]);
-				
+
 				glNormal3f(n2[0], n2[1], n2[2]);
                 glVertex3f(a2[0], a2[1], a2[2]);
             glEnd();

@@ -4,6 +4,8 @@
 using namespace std;
 
 BezierMain mainBez;
+float sub_param = 0.7;
+float asub_param = 0.1;
 
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);				// clear the color buffer
@@ -41,6 +43,16 @@ void handleInput(unsigned char key, int x, int y)
 	case '+':
     case '=':
         mainBez.transform(SCALE, Vector3f(1.2,1.2,1.2));
+        display();
+        break;
+    case 'u':
+        sub_param -= 0.1;
+        mainBez.apply_uniform_subdivision(sub_param);
+        display();
+        break;
+    case 'a':
+        asub_param -= 0.01;
+        mainBez.apply_adaptive_subdivision(asub_param);
         display();
         break;
     case 'w':
@@ -138,6 +150,8 @@ int main(int argc, char* argv[]) {
             mainBez.apply_uniform_subdivision(subdivision_param);
         } else if (type == "-a") {
             mainBez.apply_adaptive_subdivision(subdivision_param);
+        } else {
+            mainBez.apply_uniform_subdivision(sub_param);
         }
     } else {
         cout << "No filename inputted." << endl;
@@ -166,19 +180,19 @@ int main(int argc, char* argv[]) {
 	glEnable(GL_NORMALIZE);
 	glEnable(GL_LIGHTING);
 	glEnable(GL_DEPTH_TEST);
-	
+
 	// random light behind your eyes
 	GLfloat diffuse0[]={1.0, 1.0, 1.0, 1.0};
 	GLfloat ambient0[]={1.0, 1.0, 1.0, 1.0};
 	GLfloat specular0[]={1.0, 1.0, 1.0, 1.0};
 	GLfloat light0_pos[]={0.0, 0.0, 5.0, 1.0};
-	
+
 	glEnable(GL_LIGHT0);
 	glLightfv(GL_LIGHT0, GL_POSITION, light0_pos);
 	glLightfv(GL_LIGHT0, GL_AMBIENT, ambient0);
 	glLightfv(GL_LIGHT0, GL_DIFFUSE, diffuse0);
 	glLightfv(GL_LIGHT0, GL_SPECULAR, specular0);
-	
+
     glutMainLoop();
 
     return 0;
